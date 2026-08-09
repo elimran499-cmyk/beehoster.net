@@ -578,6 +578,64 @@
   }
 }
 
+/* ── Cinematic intro ──────────────────────────────────────────────────────
+   A comb builds itself out of the dark, bees fly in, the badge lands in the
+   empty centre cell, and the whole thing lifts to reveal the page. Every step
+   is CSS on a handful of nodes — a canvas or video would cost more than the
+   two and a half seconds it plays for.
+
+   Nothing here runs under prefers-reduced-motion: the component doesn't mount
+   at all in that case, rather than playing a stripped-down version. */
+
+/* Cells drop in from nothing, rotating slightly so the comb assembles rather
+   than fades. */
+@keyframes intro-cell {
+  0%   { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+  60%  { opacity: 1; transform: scale(1.08) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Bees arrive from off-screen along their own vector, overshoot, settle. */
+@keyframes intro-bee {
+  0%   { opacity: 0; transform: translate(var(--bee-from-x), var(--bee-from-y)) scale(0.4) rotate(var(--bee-spin, -30deg)); }
+  55%  { opacity: 1; }
+  75%  { transform: translate(0, 0) scale(1.12) rotate(8deg); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+/* The badge lands in the centre cell — overshoot and settle, with the blur
+   clearing as it arrives so it reads as coming into focus. */
+@keyframes intro-badge {
+  0%   { opacity: 0; transform: scale(0.35); filter: blur(14px); }
+  55%  { opacity: 1; transform: scale(1.14); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+/* A ring of light expanding out of the badge as it lands. */
+@keyframes intro-pulse {
+  0%   { opacity: 0.85; transform: scale(0.4); }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+
+@keyframes intro-word {
+  0%   { opacity: 0; transform: translateY(1.1rem); letter-spacing: .38em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: .06em; }
+}
+
+/* The curtain lifts by scaling past the viewport as it fades, so the page
+   underneath feels revealed rather than cross-faded. */
+@keyframes intro-curtain {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.14); }
+}
+
+.intro-cell   { animation: intro-cell .72s cubic-bezier(.16,1,.3,1) backwards; }
+.intro-bee    { animation: intro-bee 1.15s cubic-bezier(.16,1,.3,1) backwards; }
+.intro-badge  { animation: intro-badge .95s cubic-bezier(.16,1,.3,1) backwards; }
+.intro-pulse  { animation: intro-pulse 1.1s ease-out backwards; }
+.intro-word   { animation: intro-word .8s cubic-bezier(.16,1,.3,1) backwards; }
+.intro-curtain-out { animation: intro-curtain .62s cubic-bezier(.7,0,.84,0) forwards; }
+
 /* Custom Keyframe Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }

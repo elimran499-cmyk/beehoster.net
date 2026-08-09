@@ -3,6 +3,7 @@ import { AmbientLights } from './components/AmbientLights';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Intro } from './components/Intro';
+import { CinematicIntro } from './components/CinematicIntro';
 import { MobileShowcase } from './components/MobileShowcase';
 import { DeviceBanner } from './components/DeviceBanner';
 import { ChannelExplorer } from './components/ChannelExplorer';
@@ -33,6 +34,11 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-page text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+
+      {/* Title sequence. Sits above everything, plays once per tab session and
+          is skippable by any gesture — the page renders underneath the whole
+          time, so nothing here delays content or hides it from crawlers. */}
+      <CinematicIntro />
 
       {/* Shared neon light field behind every section */}
       <AmbientLights />
