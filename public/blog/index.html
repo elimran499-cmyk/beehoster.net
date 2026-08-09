@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog — IPTV uitgelegd | BEEHOSTER</title>
+<meta name="description" content="Praktische uitleg over IPTV: hoe het werkt in Nederland en België, hoe je het installeert op Firestick, smart-tv en Android, en hoe je het voetbal zonder haperingen kijkt." />
+<link rel="canonical" href="https://beehoster.net/blog" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="nl_NL" />
+<meta property="og:site_name" content="BEEHOSTER" />
+<meta property="og:title" content="Blog — IPTV uitgelegd | BEEHOSTER" />
+<meta property="og:description" content="Korte, praktische stukken over IPTV kijken, installeren en het voorkomen van haperingen." />
+<meta property="og:url" content="https://beehoster.net/blog" />
+<meta property="og:image" content="https://beehoster.net/logo.svg" />
+<meta name="twitter:card" content="summary" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Same daylight clay as the articles, but the index inverts the arrangement:
+     the articles put one block on the ground, the index puts the ground first
+     and gives each post its own block — which is how the Blog section on the
+     homepage reads too. */
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#F2EDE8; color:#4E3640; font-family:'Plus Jakarta Sans',system-ui,sans-serif; line-height:1.7; }
+  .wrap { width:calc(100% - 2rem); max-width:52rem; margin:1.5rem auto 3rem; padding:1rem 0 0; }
+  header a.brand { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; margin-bottom:2.5rem; }
+  header img { width:40px; height:40px; }
+  .name { font-weight:800; font-size:1.25rem; letter-spacing:.02em; color:#241318; }
+  .name span { color:#C98A12; }
+  nav.crumbs { font-size:.8rem; margin-bottom:1rem; color:#8A7079; }
+  nav.crumbs a { color:#8A7079; }
+  .meta { font-size:.8rem; text-transform:uppercase; letter-spacing:.18em; color:#B8790E; margin:0; }
+  h1 { font-size:clamp(1.9rem,5vw,2.75rem); line-height:1.15; color:#241318; margin:.5rem 0 1rem; }
+  .lede { font-size:1.05rem; max-width:36rem; }
+  a { color:#C2410C; }
+  a:hover { color:#8A2B08; }
+
+  .posts { display:grid; gap:1.25rem; margin:2.5rem 0 0; padding:0; list-style:none; }
+  @media (min-width:44rem) { .posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+  .post {
+    display:flex; flex-direction:column; height:100%; padding:1.5rem 1.5rem 1.35rem;
+    border-radius:1.75rem; text-decoration:none;
+    background:linear-gradient(158deg,#FFFFFF 0%,#FDF9F5 52%,#F8F2EB 100%);
+    border:1px solid rgba(36,19,24,.05);
+    box-shadow:
+      inset 0 2px 1px rgba(255,255,255,1),
+      inset 0 -4px 8px -2px rgba(178,148,132,.26),
+      0 2px 4px rgba(122,96,84,.10),
+      0 16px 30px -12px rgba(122,96,84,.24),
+      0 38px 64px -38px rgba(96,72,62,.38);
+    transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease;
+  }
+  .post:hover { transform:translateY(-3px); box-shadow: inset 0 2px 1px rgba(255,255,255,1), 0 6px 10px rgba(122,96,84,.14), 0 24px 40px -12px rgba(122,96,84,.30); }
+  .post-top { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:.9rem; }
+  .kicker { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.2em; color:#B8790E; }
+  .read { font-size:.7rem; color:#8A7079; }
+  .post h2 { font-size:1.1rem; line-height:1.35; color:#241318; margin:0; }
+  .post p { font-size:.9rem; color:#4E3640; margin:.7rem 0 0; flex:1; }
+  .more { margin-top:1.1rem; font-size:.75rem; font-weight:700; color:#C2410C; }
+
+  .cta {
+    display:block; margin:2.5rem 0 0; padding:1.5rem; border-radius:1.5rem; text-decoration:none;
+    background:linear-gradient(158deg,#FFF3EC 0%,#FFE6D8 48%,#FFD9C4 100%);
+    border:1px solid rgba(255,92,58,.22);
+    box-shadow:
+      inset 0 2px 1px rgba(255,255,255,1),
+      inset 0 -5px 10px -2px rgba(200,122,88,.30),
+      0 2px 4px rgba(122,96,84,.12),
+      0 14px 26px -10px rgba(160,96,70,.28);
+    transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease;
+  }
+  .cta:hover { transform:translateY(-2px); box-shadow: inset 0 2px 1px rgba(255,255,255,1), 0 5px 8px rgba(150,70,46,.2), 0 20px 34px -10px rgba(160,96,70,.34); }
+  .cta strong { display:block; color:#241318; font-size:1.05rem; margin-bottom:.35rem; }
+  .cta span { color:#4E3640; font-size:.9rem; }
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgba(36,19,24,.10); font-size:.85rem; color:#8A7079; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CollectionPage",
+"@id":"https://beehoster.net/blog",
+"url":"https://beehoster.net/blog",
+"name":"Blog — IPTV uitgelegd | BEEHOSTER",
+"description":"Praktische uitleg over IPTV kijken, installeren en het voorkomen van haperingen.",
+"inLanguage":"nl-NL",
+"isPartOf":{"@id":"https://beehoster.net/#website"},
+"publisher":{"@id":"https://beehoster.net/#organization"},
+"mainEntity":{"@type":"ItemList","itemListOrder":"https://schema.org/ItemListUnordered","numberOfItems":3,
+"itemListElement":[
+{"@type":"ListItem","position":1,"url":"https://beehoster.net/blog/iptv-kijken-nederland","name":"IPTV kijken in Nederland: hoe werkt het?"},
+{"@type":"ListItem","position":2,"url":"https://beehoster.net/blog/iptv-installeren","name":"IPTV installeren op Firestick, smart-tv en Android"},
+{"@type":"ListItem","position":3,"url":"https://beehoster.net/blog/voetbal-kijken-iptv","name":"Eredivisie en Champions League kijken via IPTV"}
+]}}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/">
+      <img src="/logo.svg" alt="BEEHOSTER logo" width="40" height="40" />
+      <span class="name"><span>BEE</span>HOSTER</span>
+    </a>
+  </header>
+
+  <nav class="crumbs"><a href="/">Start</a> › Blog</nav>
+  <p class="meta">Blog</p>
+  <h1>Alles over IPTV, uitgelegd</h1>
+  <p class="lede">Korte, praktische stukken over kijken, installeren en het voorkomen van haperingen — geschreven voor Nederland en België.</p>
+
+  <ul class="posts">
+    <li>
+      <a class="post" href="/blog/iptv-kijken-nederland">
+        <span class="post-top"><span class="kicker">Uitleg</span><span class="read">4 min lezen</span></span>
+        <h2>IPTV kijken in Nederland: hoe werkt het?</h2>
+        <p>Wat IPTV precies is, welke internetsnelheid je nodig hebt en waar je op let bij het kiezen van een aanbieder.</p>
+        <span class="more">Lees verder →</span>
+      </a>
+    </li>
+    <li>
+      <a class="post" href="/blog/iptv-installeren">
+        <span class="post-top"><span class="kicker">Handleiding</span><span class="read">5 min lezen</span></span>
+        <h2>IPTV installeren op Firestick, smart-tv en Android</h2>
+        <p>Stap voor stap per apparaat, met de juiste app en oplossingen voor haperingen en inlogfouten.</p>
+        <span class="more">Lees verder →</span>
+      </a>
+    </li>
+    <li>
+      <a class="post" href="/blog/voetbal-kijken-iptv">
+        <span class="post-top"><span class="kicker">Sport</span><span class="read">4 min lezen</span></span>
+        <h2>Eredivisie en Champions League kijken via IPTV</h2>
+        <p>Welke zenders je nodig hebt voor het voetbal, en hoe je zorgt dat er niets hapert tijdens de wedstrijd.</p>
+        <span class="more">Lees verder →</span>
+      </a>
+    </li>
+  </ul>
+
+  <a class="cta" href="/#pricing">
+    <strong>Klaar om te kijken?</strong>
+    <span>Bekijk de BEEHOSTER-pakketten — activatie binnen 5 minuten via WhatsApp.</span>
+  </a>
+
+  <footer>
+    <p><a href="/">← Terug naar beehoster.net</a> · Vragen? WhatsApp +44 7832 486269</p>
+  </footer>
+</div>
+</body>
+</html>

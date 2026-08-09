@@ -45,6 +45,16 @@ export const Blog: React.FC = () => (
         <p className="mt-3 text-sm sm:text-base text-zinc-400">
           Korte, praktische stukken over kijken, installeren en het voorkomen van haperingen.
         </p>
+
+        {/* The hub page needs an internal link from the homepage, or crawlers
+            only ever reach the articles and never the index that groups them. */}
+        <a
+          href="/blog"
+          className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full clay-panel clay-edge relative text-xs font-bold text-ink hover:text-[#B8790E] transition-colors"
+        >
+          Alle artikelen
+          <ArrowRight className="w-3.5 h-3.5 text-[#FF5C3A]" />
+        </a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
