@@ -648,9 +648,9 @@
 }
 
 .intro-cell      { animation: intro-cell .46s cubic-bezier(.16,1,.3,1) backwards; }
-.intro-bee       { animation: intro-bee .78s cubic-bezier(.22,.9,.3,1) backwards; }
-.intro-bee-hover { animation: intro-bee-hover 2.2s ease-in-out infinite backwards; }
-.intro-trail     { animation: intro-trail .78s cubic-bezier(.22,.9,.3,1) backwards; }
+.intro-bee       { animation: intro-bee 1.25s cubic-bezier(.25,.85,.35,1) backwards; }
+.intro-bee-hover { animation: intro-bee-hover 3.6s ease-in-out infinite backwards; }
+.intro-trail     { animation: intro-trail 1.25s cubic-bezier(.25,.85,.35,1) backwards; }
 .intro-badge     { animation: intro-badge .62s cubic-bezier(.16,1,.3,1) backwards; }
 .intro-pulse     { animation: intro-pulse .85s ease-out backwards; }
 .intro-word      { animation: intro-word .5s cubic-bezier(.16,1,.3,1) backwards; }

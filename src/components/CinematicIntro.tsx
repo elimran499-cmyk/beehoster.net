@@ -39,16 +39,31 @@ const buildComb = (): Cell[] => {
 /* The swarm. Each bee gets its own entry vector and an arc midpoint that bends
    the flight — a straight interpolation reads as a sprite being moved rather
    than something flying. Depth comes from size, opacity and blur, so the swarm
-   occupies space instead of sitting on one plane. */
+   occupies space instead of sitting on one plane.
+
+   Delays stay inside ~450ms even though the flight itself is 1.25s: the
+   curtain lifts at 1900ms, so a later start would leave bees still crossing
+   the screen as it goes. */
 const BEES = [
-  { top: '20%', left: '17%', size: 'w-9 h-9',   from: ['-62vw', '-26vh'], mid: ['-22vw', '-20vh'], spin: '-46deg', delay: 120, depth: '' },
-  { top: '26%', left: '80%', size: 'w-7 h-7',   from: ['58vw', '-30vh'],  mid: ['24vw', '-8vh'],   spin: '38deg',  delay: 190, depth: '' },
-  { top: '72%', left: '24%', size: 'w-6 h-6',   from: ['-48vw', '36vh'],  mid: ['-18vw', '10vh'],  spin: '28deg',  delay: 250, depth: 'opacity-80' },
-  { top: '76%', left: '74%', size: 'w-8 h-8',   from: ['52vw', '40vh'],   mid: ['14vw', '18vh'],   spin: '-30deg', delay: 160, depth: '' },
-  { top: '46%', left: '90%', size: 'w-5 h-5',   from: ['50vw', '4vh'],    mid: ['20vw', '-14vh'],  spin: '20deg',  delay: 300, depth: 'opacity-70 blur-[1px]' },
-  { top: '40%', left: '9%',  size: 'w-5 h-5',   from: ['-52vw', '10vh'],  mid: ['-20vw', '-12vh'], spin: '-22deg', delay: 330, depth: 'opacity-70 blur-[1px]' },
-  { top: '12%', left: '52%', size: 'w-6 h-6',   from: ['6vw', '-42vh'],   mid: ['-10vw', '-18vh'], spin: '52deg',  delay: 220, depth: 'opacity-85' },
-  { top: '86%', left: '48%', size: 'w-4 h-4',   from: ['-8vw', '44vh'],   mid: ['12vw', '16vh'],   spin: '-18deg', delay: 360, depth: 'opacity-60 blur-[1.5px]' },
+  // Foreground — largest, sharpest, arriving first
+  { top: '20%', left: '17%', size: 'w-9 h-9', from: ['-64vw', '-26vh'], mid: ['-24vw', '-20vh'], spin: '-46deg', delay: 60,  depth: '' },
+  { top: '26%', left: '80%', size: 'w-8 h-8', from: ['60vw', '-30vh'],  mid: ['26vw', '-8vh'],   spin: '38deg',  delay: 110, depth: '' },
+  { top: '76%', left: '74%', size: 'w-8 h-8', from: ['54vw', '40vh'],   mid: ['16vw', '18vh'],   spin: '-30deg', delay: 150, depth: '' },
+  { top: '68%', left: '38%', size: 'w-7 h-7', from: ['-14vw', '46vh'],  mid: ['-6vw', '20vh'],   spin: '34deg',  delay: 190, depth: '' },
+
+  // Mid depth
+  { top: '72%', left: '24%', size: 'w-6 h-6', from: ['-50vw', '36vh'],  mid: ['-20vw', '10vh'],  spin: '28deg',  delay: 170, depth: 'opacity-85' },
+  { top: '12%', left: '52%', size: 'w-6 h-6', from: ['6vw', '-44vh'],   mid: ['-10vw', '-18vh'], spin: '52deg',  delay: 140, depth: 'opacity-85' },
+  { top: '34%', left: '66%', size: 'w-6 h-6', from: ['44vw', '-16vh'],  mid: ['18vw', '4vh'],    spin: '-24deg', delay: 230, depth: 'opacity-85' },
+  { top: '54%', left: '30%', size: 'w-5 h-5', from: ['-42vw', '22vh'],  mid: ['-16vw', '2vh'],   spin: '30deg',  delay: 260, depth: 'opacity-80' },
+  { top: '16%', left: '34%', size: 'w-5 h-5', from: ['-30vw', '-40vh'], mid: ['-12vw', '-16vh'], spin: '-52deg', delay: 210, depth: 'opacity-80' },
+
+  // Far — small, dim and softened, so the swarm has a back layer
+  { top: '46%', left: '90%', size: 'w-5 h-5', from: ['52vw', '4vh'],    mid: ['22vw', '-14vh'],  spin: '20deg',  delay: 300, depth: 'opacity-70 blur-[1px]' },
+  { top: '40%', left: '9%',  size: 'w-5 h-5', from: ['-54vw', '10vh'],  mid: ['-22vw', '-12vh'], spin: '-22deg', delay: 330, depth: 'opacity-70 blur-[1px]' },
+  { top: '86%', left: '48%', size: 'w-4 h-4', from: ['-8vw', '46vh'],   mid: ['12vw', '16vh'],   spin: '-18deg', delay: 380, depth: 'opacity-60 blur-[1.5px]' },
+  { top: '8%',  left: '72%', size: 'w-4 h-4', from: ['30vw', '-46vh'],  mid: ['10vw', '-22vh'],  spin: '44deg',  delay: 350, depth: 'opacity-60 blur-[1.5px]' },
+  { top: '60%', left: '58%', size: 'w-4 h-4', from: ['26vw', '38vh'],   mid: ['8vw', '14vh'],    spin: '-36deg', delay: 420, depth: 'opacity-55 blur-[2px]' },
 ];
 
 /* Plays on every load. The only thing that suppresses it is a stated
