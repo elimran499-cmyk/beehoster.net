@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { BeehosterLogo, BeeGlyph } from './BeehosterLogo';
 
-const PLAY_MS = 2500;
-const FADE_MS = 620;
+const PLAY_MS = 1900;
+const FADE_MS = 420;
 /* Skipping is only offered after the sequence has actually started showing
    something. Without this, a pointer or wheel event that happens to land in
    the first moments — a mouse already held down, a trackpad still coasting,
    an autofocus scroll — dismissed the whole thing before it was visible, and
    the intro looked broken rather than fast. */
-const SKIP_GRACE_MS = 700;
-const SEEN_KEY = 'bh-intro-seen';
+const SKIP_GRACE_MS = 420;
 
 /* The comb that builds itself around the logo. Axial coordinates out to two
    rings; the centre cell is left empty because that's where the badge lands.
@@ -37,39 +36,27 @@ const buildComb = (): Cell[] => {
   return cells;
 };
 
-/* Where each bee flies in from. Kept off-screen in their own direction so they
-   converge on the mark instead of appearing in place. */
+/* The swarm. Each bee gets its own entry vector and an arc midpoint that bends
+   the flight — a straight interpolation reads as a sprite being moved rather
+   than something flying. Depth comes from size, opacity and blur, so the swarm
+   occupies space instead of sitting on one plane. */
 const BEES = [
-  { top: '18%', left: '16%', size: 'w-9 h-9', from: ['-60vw', '-30vh'], spin: '-40deg', delay: 620 },
-  { top: '24%', left: '82%', size: 'w-7 h-7', from: ['55vw', '-26vh'], spin: '35deg', delay: 760 },
-  { top: '74%', left: '22%', size: 'w-6 h-6', from: ['-45vw', '34vh'], spin: '25deg', delay: 880 },
-  { top: '78%', left: '76%', size: 'w-8 h-8', from: ['50vw', '38vh'], spin: '-28deg', delay: 700 },
-  { top: '48%', left: '90%', size: 'w-5 h-5', from: ['48vw', '6vh'], spin: '18deg', delay: 980 },
+  { top: '20%', left: '17%', size: 'w-9 h-9',   from: ['-62vw', '-26vh'], mid: ['-22vw', '-20vh'], spin: '-46deg', delay: 120, depth: '' },
+  { top: '26%', left: '80%', size: 'w-7 h-7',   from: ['58vw', '-30vh'],  mid: ['24vw', '-8vh'],   spin: '38deg',  delay: 190, depth: '' },
+  { top: '72%', left: '24%', size: 'w-6 h-6',   from: ['-48vw', '36vh'],  mid: ['-18vw', '10vh'],  spin: '28deg',  delay: 250, depth: 'opacity-80' },
+  { top: '76%', left: '74%', size: 'w-8 h-8',   from: ['52vw', '40vh'],   mid: ['14vw', '18vh'],   spin: '-30deg', delay: 160, depth: '' },
+  { top: '46%', left: '90%', size: 'w-5 h-5',   from: ['50vw', '4vh'],    mid: ['20vw', '-14vh'],  spin: '20deg',  delay: 300, depth: 'opacity-70 blur-[1px]' },
+  { top: '40%', left: '9%',  size: 'w-5 h-5',   from: ['-52vw', '10vh'],  mid: ['-20vw', '-12vh'], spin: '-22deg', delay: 330, depth: 'opacity-70 blur-[1px]' },
+  { top: '12%', left: '52%', size: 'w-6 h-6',   from: ['6vw', '-42vh'],   mid: ['-10vw', '-18vh'], spin: '52deg',  delay: 220, depth: 'opacity-85' },
+  { top: '86%', left: '48%', size: 'w-4 h-4',   from: ['-8vw', '44vh'],   mid: ['12vw', '16vh'],   spin: '-18deg', delay: 360, depth: 'opacity-60 blur-[1.5px]' },
 ];
 
-/* Decided at module scope, and deliberately NOT in a useState initializer:
-   StrictMode invokes initializers twice, so the second call would read the
-   "seen" flag the first call had just written and conclude the sequence had
-   already played — the intro never appeared in development.
-
-   Returning within the same tab session skips it either way. A title sequence
-   is charming once and an obstacle every time after. */
-const shouldPlay = ((): boolean => {
-  if (typeof window === 'undefined') return false;
-  /* ?intro=replay forces it, for showing the sequence to someone without
-     having to open a fresh tab. Checked before the reduced-motion guard is
-     irrelevant — an explicit request still respects that preference. */
-  const forced = new URLSearchParams(window.location.search).get('intro') === 'replay';
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  if (forced) return true;
-  try {
-    if (sessionStorage.getItem(SEEN_KEY)) return false;
-    sessionStorage.setItem(SEEN_KEY, '1');
-  } catch {
-    /* Private mode can throw on sessionStorage; play it rather than break. */
-  }
-  return true;
-})();
+/* Plays on every load. The only thing that suppresses it is a stated
+   preference for reduced motion — no session flag, so a refresh always
+   replays it. It is short and skippable enough to carry that. */
+const shouldPlay =
+  typeof window !== 'undefined' &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const CinematicIntro: React.FC = () => {
   const [visible, setVisible] = useState(shouldPlay);
@@ -159,7 +146,7 @@ export const CinematicIntro: React.FC = () => {
               strokeOpacity="0.32"
               strokeWidth="0.045"
               style={{
-                animationDelay: `${140 + cell.dist * 190}ms`,
+                animationDelay: `${60 + cell.dist * 90}ms`,
                 transformOrigin: `${cell.x}px ${cell.y}px`,
               }}
             />
@@ -167,23 +154,51 @@ export const CinematicIntro: React.FC = () => {
         </svg>
       </div>
 
-      {/* ── Bees converging ─────────────────────────────────────────── */}
-      {BEES.map((bee, i) => (
-        <BeeGlyph
-          key={i}
-          className={`intro-bee absolute ${bee.size} text-[#FFD166] drop-shadow-[0_4px_14px_rgba(0,0,0,0.55)]`}
-          style={
-            {
-              top: bee.top,
-              left: bee.left,
-              animationDelay: `${bee.delay}ms`,
-              '--bee-from-x': bee.from[0],
-              '--bee-from-y': bee.from[1],
-              '--bee-spin': bee.spin,
-            } as React.CSSProperties
-          }
-        />
-      ))}
+      {/* ── The swarm arcing in ─────────────────────────────────────── */}
+      {BEES.map((bee, i) => {
+        const vars = {
+          top: bee.top,
+          left: bee.left,
+          '--bee-from-x': bee.from[0],
+          '--bee-from-y': bee.from[1],
+          '--bee-mid-x': bee.mid[0],
+          '--bee-mid-y': bee.mid[1],
+          '--bee-spin': bee.spin,
+        } as React.CSSProperties;
+
+        return (
+          <React.Fragment key={i}>
+            {/* The streak burns off along the same path, just behind. */}
+            <span
+              aria-hidden="true"
+              className="intro-trail absolute h-px w-24 origin-right rounded-full pointer-events-none"
+              style={{
+                ...vars,
+                animationDelay: `${bee.delay}ms`,
+                background:
+                  'linear-gradient(90deg, transparent 0%, rgba(255,209,102,0.55) 60%, rgba(255,236,190,0.9) 100%)',
+              }}
+            />
+
+            {/* Outer element owns the flight; the inner one hovers once it has
+                landed, so the two transforms never fight over the element. */}
+            <span
+              aria-hidden="true"
+              className={`intro-bee absolute pointer-events-none ${bee.depth}`}
+              style={{ ...vars, animationDelay: `${bee.delay}ms` }}
+            >
+              <span
+                className="intro-bee-hover block"
+                style={{ animationDelay: `${bee.delay + 780}ms` }}
+              >
+                <BeeGlyph
+                  className={`${bee.size} text-[#FFD166] drop-shadow-[0_4px_14px_rgba(0,0,0,0.55)]`}
+                />
+              </span>
+            </span>
+          </React.Fragment>
+        );
+      })}
 
       {/* ── The mark landing in the empty centre cell ───────────────── */}
       <div className="relative z-10 flex flex-col items-center">
@@ -191,26 +206,26 @@ export const CinematicIntro: React.FC = () => {
           <span
             className="intro-pulse absolute inset-0 rounded-full"
             style={{
-              animationDelay: '820ms',
+              animationDelay: '470ms',
               boxShadow: '0 0 0 2px rgba(255,209,102,0.55), 0 0 60px 12px rgba(255,154,46,0.45)',
             }}
           />
           <BeehosterLogo
             className="intro-badge w-28 h-28 sm:w-36 sm:h-36 drop-shadow-[0_18px_50px_rgba(0,0,0,0.75)]"
-            style={{ animationDelay: '620ms' }}
+            style={{ animationDelay: '330ms' }}
           />
         </div>
 
         <p
           className="intro-word mt-6 text-2xl sm:text-3xl font-black text-[#FFF6E4]"
-          style={{ animationDelay: '1180ms' }}
+          style={{ animationDelay: '760ms' }}
         >
           <span className="text-[#FFD166]">BEE</span>HOSTER
         </p>
 
         <p
           className="intro-word mt-2 font-condensed uppercase text-[10px] sm:text-[11px] tracking-[0.32em] text-[#FFD166]/70"
-          style={{ animationDelay: '1380ms' }}
+          style={{ animationDelay: '900ms' }}
         >
           Eén korf · nooit stil
         </p>
