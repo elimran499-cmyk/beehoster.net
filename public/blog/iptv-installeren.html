@@ -19,26 +19,54 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: dark; }
+  /* Daylight clay, matching the app. The article sits in a raised block on the
+     cream ground the same way every section of the site does; only the CTA gets
+     a second, warmer block so it reads as the one action on the page. */
+  :root { color-scheme: light; }
   * { box-sizing: border-box; }
-  body { margin:0; background:#14070F; color:#E4E4E7; font-family:'Plus Jakarta Sans',system-ui,sans-serif; line-height:1.7; }
-  .wrap { max-width:44rem; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  body { margin:0; background:#F2EDE8; color:#4E3640; font-family:'Plus Jakarta Sans',system-ui,sans-serif; line-height:1.7; }
+  .wrap {
+    width:calc(100% - 2rem); max-width:44rem; margin:1.5rem auto 3rem;
+    padding:2.25rem 1.5rem 3rem;
+    background:linear-gradient(158deg,#FFFFFF 0%,#FDF9F5 52%,#F8F2EB 100%);
+    border:1px solid rgba(36,19,24,.05); border-radius:2rem;
+    box-shadow:
+      inset 0 2px 1px rgba(255,255,255,1),
+      inset 0 -4px 8px -2px rgba(178,148,132,.26),
+      0 2px 4px rgba(122,96,84,.10),
+      0 16px 30px -12px rgba(122,96,84,.24),
+      0 38px 64px -38px rgba(96,72,62,.38);
+  }
+  @media (min-width:48rem) { .wrap { padding:3rem 3.25rem 3.5rem; } }
   header a.brand { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; margin-bottom:2.5rem; }
   header img { width:40px; height:40px; }
-  .name { font-weight:800; font-size:1.25rem; letter-spacing:.02em; color:#fff; }
-  .name span { color:#FFE600; }
-  h1 { font-size:clamp(1.9rem,5vw,2.75rem); line-height:1.15; color:#fff; margin:.5rem 0 1rem; }
-  h2 { font-size:1.35rem; color:#fff; margin:2.5rem 0 .75rem; }
-  .meta { font-size:.8rem; text-transform:uppercase; letter-spacing:.18em; color:#FFD166; }
-  p, li { color:#C9C4CB; }
-  a { color:#FFD166; }
-  ul, ol { padding-left:1.15rem; }
-  .cta { display:block; margin:2.5rem 0 0; padding:1.5rem; border-radius:1.25rem; border:1px solid rgba(255,190,120,.4); background:linear-gradient(158deg,rgba(94,40,22,.6),rgba(24,9,17,.9)); text-decoration:none; }
-  .cta strong { display:block; color:#fff; font-size:1.05rem; margin-bottom:.35rem; }
-  .cta span { color:#C9C4CB; font-size:.9rem; }
-  nav.crumbs { font-size:.8rem; margin-bottom:1rem; color:#8B8590; }
-  nav.crumbs a { color:#8B8590; }
-  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,.1); font-size:.85rem; color:#8B8590; }
+  .name { font-weight:800; font-size:1.25rem; letter-spacing:.02em; color:#241318; }
+  .name span { color:#C98A12; }
+  h1 { font-size:clamp(1.9rem,5vw,2.75rem); line-height:1.15; color:#241318; margin:.5rem 0 1rem; }
+  h2 { font-size:1.35rem; color:#241318; margin:2.5rem 0 .75rem; }
+  .meta { font-size:.8rem; text-transform:uppercase; letter-spacing:.18em; color:#B8790E; }
+  p, li { color:#4E3640; }
+  strong { color:#241318; }
+  a { color:#C2410C; }
+  a:hover { color:#8A2B08; }
+  ul { padding-left:1.15rem; }
+  .cta {
+    display:block; margin:2.5rem 0 0; padding:1.5rem; border-radius:1.5rem; text-decoration:none;
+    background:linear-gradient(158deg,#FFF3EC 0%,#FFE6D8 48%,#FFD9C4 100%);
+    border:1px solid rgba(255,92,58,.22);
+    box-shadow:
+      inset 0 2px 1px rgba(255,255,255,1),
+      inset 0 -5px 10px -2px rgba(200,122,88,.30),
+      0 2px 4px rgba(122,96,84,.12),
+      0 14px 26px -10px rgba(160,96,70,.28);
+    transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease;
+  }
+  .cta:hover { transform:translateY(-2px); box-shadow: inset 0 2px 1px rgba(255,255,255,1), 0 5px 8px rgba(150,70,46,.2), 0 20px 34px -10px rgba(160,96,70,.34); }
+  .cta strong { display:block; color:#241318; font-size:1.05rem; margin-bottom:.35rem; }
+  .cta span { color:#4E3640; font-size:.9rem; }
+  nav.crumbs { font-size:.8rem; margin-bottom:1rem; color:#8A7079; }
+  nav.crumbs a { color:#8A7079; }
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgba(36,19,24,.10); font-size:.85rem; color:#8A7079; }
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"HowTo",
