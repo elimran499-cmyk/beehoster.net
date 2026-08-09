@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://beehoster.vercel.app/</loc>
+    <loc>https://beehoster.net/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://beehoster.vercel.app/blog/iptv-kijken-nederland</loc>
+    <loc>https://beehoster.net/blog/iptv-kijken-nederland</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://beehoster.vercel.app/blog/iptv-installeren</loc>
+    <loc>https://beehoster.net/blog/iptv-installeren</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://beehoster.vercel.app/blog/voetbal-kijken-iptv</loc>
+    <loc>https://beehoster.net/blog/voetbal-kijken-iptv</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

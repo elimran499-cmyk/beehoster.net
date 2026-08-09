@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://beehoster.vercel.app/sitemap.xml
+Sitemap: https://beehoster.net/sitemap.xml
