@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { BeehosterLogo, BeeGlyph } from './BeehosterLogo';
 
-const PLAY_MS = 1900;
+const PLAY_MS = 2400;
 const FADE_MS = 420;
 /* Skipping is only offered after the sequence has actually started showing
    something. Without this, a pointer or wheel event that happens to land in
@@ -41,29 +41,30 @@ const buildComb = (): Cell[] => {
    than something flying. Depth comes from size, opacity and blur, so the swarm
    occupies space instead of sitting on one plane.
 
-   Delays stay inside ~450ms even though the flight itself is 1.25s: the
-   curtain lifts at 1900ms, so a later start would leave bees still crossing
-   the screen as it goes. */
+   Delays stay inside ~300ms so the whole swarm is down by ~1550ms. The
+   curtain then holds for another ~850ms with everything in place — comb,
+   swarm, badge and wordmark — before it lifts. Without that hold the last
+   bees were still landing as the page appeared. */
 const BEES = [
   // Foreground — largest, sharpest, arriving first
-  { top: '20%', left: '17%', size: 'w-9 h-9', from: ['-64vw', '-26vh'], mid: ['-24vw', '-20vh'], spin: '-46deg', delay: 60,  depth: '' },
-  { top: '26%', left: '80%', size: 'w-8 h-8', from: ['60vw', '-30vh'],  mid: ['26vw', '-8vh'],   spin: '38deg',  delay: 110, depth: '' },
-  { top: '76%', left: '74%', size: 'w-8 h-8', from: ['54vw', '40vh'],   mid: ['16vw', '18vh'],   spin: '-30deg', delay: 150, depth: '' },
-  { top: '68%', left: '38%', size: 'w-7 h-7', from: ['-14vw', '46vh'],  mid: ['-6vw', '20vh'],   spin: '34deg',  delay: 190, depth: '' },
+  { top: '20%', left: '17%', size: 'w-9 h-9', from: ['-64vw', '-26vh'], mid: ['-24vw', '-20vh'], spin: '-46deg', delay: 43,  depth: '' },
+  { top: '26%', left: '80%', size: 'w-8 h-8', from: ['60vw', '-30vh'],  mid: ['26vw', '-8vh'],   spin: '38deg',  delay: 79, depth: '' },
+  { top: '76%', left: '74%', size: 'w-8 h-8', from: ['54vw', '40vh'],   mid: ['16vw', '18vh'],   spin: '-30deg', delay: 108, depth: '' },
+  { top: '68%', left: '38%', size: 'w-7 h-7', from: ['-14vw', '46vh'],  mid: ['-6vw', '20vh'],   spin: '34deg',  delay: 137, depth: '' },
 
   // Mid depth
-  { top: '72%', left: '24%', size: 'w-6 h-6', from: ['-50vw', '36vh'],  mid: ['-20vw', '10vh'],  spin: '28deg',  delay: 170, depth: 'opacity-85' },
-  { top: '12%', left: '52%', size: 'w-6 h-6', from: ['6vw', '-44vh'],   mid: ['-10vw', '-18vh'], spin: '52deg',  delay: 140, depth: 'opacity-85' },
-  { top: '34%', left: '66%', size: 'w-6 h-6', from: ['44vw', '-16vh'],  mid: ['18vw', '4vh'],    spin: '-24deg', delay: 230, depth: 'opacity-85' },
-  { top: '54%', left: '30%', size: 'w-5 h-5', from: ['-42vw', '22vh'],  mid: ['-16vw', '2vh'],   spin: '30deg',  delay: 260, depth: 'opacity-80' },
-  { top: '16%', left: '34%', size: 'w-5 h-5', from: ['-30vw', '-40vh'], mid: ['-12vw', '-16vh'], spin: '-52deg', delay: 210, depth: 'opacity-80' },
+  { top: '72%', left: '24%', size: 'w-6 h-6', from: ['-50vw', '36vh'],  mid: ['-20vw', '10vh'],  spin: '28deg',  delay: 122, depth: 'opacity-85' },
+  { top: '12%', left: '52%', size: 'w-6 h-6', from: ['6vw', '-44vh'],   mid: ['-10vw', '-18vh'], spin: '52deg',  delay: 101, depth: 'opacity-85' },
+  { top: '34%', left: '66%', size: 'w-6 h-6', from: ['44vw', '-16vh'],  mid: ['18vw', '4vh'],    spin: '-24deg', delay: 166, depth: 'opacity-85' },
+  { top: '54%', left: '30%', size: 'w-5 h-5', from: ['-42vw', '22vh'],  mid: ['-16vw', '2vh'],   spin: '30deg',  delay: 187, depth: 'opacity-80' },
+  { top: '16%', left: '34%', size: 'w-5 h-5', from: ['-30vw', '-40vh'], mid: ['-12vw', '-16vh'], spin: '-52deg', delay: 151, depth: 'opacity-80' },
 
   // Far — small, dim and softened, so the swarm has a back layer
-  { top: '46%', left: '90%', size: 'w-5 h-5', from: ['52vw', '4vh'],    mid: ['22vw', '-14vh'],  spin: '20deg',  delay: 300, depth: 'opacity-70 blur-[1px]' },
-  { top: '40%', left: '9%',  size: 'w-5 h-5', from: ['-54vw', '10vh'],  mid: ['-22vw', '-12vh'], spin: '-22deg', delay: 330, depth: 'opacity-70 blur-[1px]' },
-  { top: '86%', left: '48%', size: 'w-4 h-4', from: ['-8vw', '46vh'],   mid: ['12vw', '16vh'],   spin: '-18deg', delay: 380, depth: 'opacity-60 blur-[1.5px]' },
-  { top: '8%',  left: '72%', size: 'w-4 h-4', from: ['30vw', '-46vh'],  mid: ['10vw', '-22vh'],  spin: '44deg',  delay: 350, depth: 'opacity-60 blur-[1.5px]' },
-  { top: '60%', left: '58%', size: 'w-4 h-4', from: ['26vw', '38vh'],   mid: ['8vw', '14vh'],    spin: '-36deg', delay: 420, depth: 'opacity-55 blur-[2px]' },
+  { top: '46%', left: '90%', size: 'w-5 h-5', from: ['52vw', '4vh'],    mid: ['22vw', '-14vh'],  spin: '20deg',  delay: 216, depth: 'opacity-70 blur-[1px]' },
+  { top: '40%', left: '9%',  size: 'w-5 h-5', from: ['-54vw', '10vh'],  mid: ['-22vw', '-12vh'], spin: '-22deg', delay: 238, depth: 'opacity-70 blur-[1px]' },
+  { top: '86%', left: '48%', size: 'w-4 h-4', from: ['-8vw', '46vh'],   mid: ['12vw', '16vh'],   spin: '-18deg', delay: 274, depth: 'opacity-60 blur-[1.5px]' },
+  { top: '8%',  left: '72%', size: 'w-4 h-4', from: ['30vw', '-46vh'],  mid: ['10vw', '-22vh'],  spin: '44deg',  delay: 252, depth: 'opacity-60 blur-[1.5px]' },
+  { top: '60%', left: '58%', size: 'w-4 h-4', from: ['26vw', '38vh'],   mid: ['8vw', '14vh'],    spin: '-36deg', delay: 302, depth: 'opacity-55 blur-[2px]' },
 ];
 
 /* Plays on every load. The only thing that suppresses it is a stated
