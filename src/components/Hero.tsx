@@ -7,7 +7,7 @@ interface HeroProps {
   onOpenOrderModal: (planId?: string) => void;
 }
 
-interface FilmCard {
+export interface FilmCard {
   id: string;
   title: string;
   year: string;
@@ -21,7 +21,7 @@ interface FilmCard {
 
 /* VOD wall. `poster` holds the artwork URL; the gradient/glow pair stays as the
    fallback that renders if an image fails to load. */
-const films: FilmCard[] = [
+export const films: FilmCard[] = [
   { id: 'f1', title: 'Dune: Part Two', year: '2024', genre: 'Sci-Fi Epic', poster: 'https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpeg', gradient: 'from-orange-600/60 via-[#2A0B08] to-black', glow: 'rgba(255,122,60,0.62)', badge: 'DOLBY VISION' },
   { id: 'f2', title: 'Oppenheimer', year: '2023', genre: 'Drama', poster: 'https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg', gradient: 'from-amber-600/55 via-[#251005] to-black', glow: 'rgba(255,154,46,0.5)' },
   { id: 'f3', title: 'The Batman', year: '2022', genre: 'Crime Thriller', poster: 'https://upload.wikimedia.org/wikipedia/en/f/ff/The_Batman_%28film%29_poster.jpg', gradient: 'from-rose-700/55 via-[#22060F] to-black', glow: 'rgba(255,61,139,0.48)', badge: '4K HDR' },
@@ -107,7 +107,7 @@ const FilmPoster: React.FC<{ film: FilmCard; compact?: boolean; bare?: boolean; 
       >
         {film.title}
       </h3>
-      <p className={`mt-0.5 uppercase tracking-[0.18em] text-zinc-400 ${compact ? 'text-[9px]' : 'text-[10px]'}`}>
+      <p className={`mt-0.5 uppercase tracking-[0.18em] text-[#B9AAB0] ${compact ? 'text-[9px]' : 'text-[10px]'}`}>
         {compact ? film.year : `${film.year} · ${film.genre}`}
       </p>
     </div>
@@ -180,23 +180,24 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
   const colC = films.slice(8, 12);
   const colD = films.slice(12, 16);
 
+  /* Phones get MobileShowcase instead — the id that the nav and the scroll spy
+     target moved up to the wrapper in App, so it survives either branch. */
   return (
     <section
-      id="hero"
-      className="relative overflow-hidden bg-pitch-black pt-20 sm:pt-24 lg:pt-28 pb-14 lg:pb-16 flex items-center"
+      className="relative overflow-hidden bg-page pt-20 sm:pt-24 lg:pt-28 pb-14 lg:pb-16 hidden sm:flex items-center"
     >
       {/* ── Dimensional Backdrop: sapphire depth, drifting panels, light trails ── */}
       <div aria-hidden="true" className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Near-black to dark sapphire */}
-        <div className="absolute inset-0 bg-[radial-gradient(125%_95%_at_62%_42%,#3B1024_0%,#23091A_45%,#180712_72%,#100509_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(125%_95%_at_62%_42%,#FFFFFF_0%,#FAF4EE_45%,#F4EDE5_72%,#EFE7DE_100%)]" />
 
         {/* Abstract blurred UI panels, far back */}
-        <div className="hidden lg:block absolute top-[14%] left-[26%] w-72 h-44 rounded-3xl glass-card opacity-25 blur-[7px] -rotate-6" />
-        <div className="hidden lg:block absolute top-[54%] left-[19%] w-56 h-32 rounded-3xl glass-card opacity-20 blur-[9px] rotate-3" />
-        <div className="hidden lg:block absolute top-[30%] left-[58%] w-64 h-40 rounded-3xl glass-card opacity-[0.14] blur-[11px] rotate-[7deg]" />
-        <div className="hidden lg:flex absolute top-[70%] left-[34%] w-40 h-12 rounded-full glass-card opacity-25 blur-[5px] -rotate-3 items-center gap-2 px-4">
-          <span className="w-3 h-3 rounded-full border-2 border-white/50" />
-          <span className="h-1.5 flex-1 rounded-full bg-white/25" />
+        <div className="hidden lg:block absolute top-[14%] left-[26%] w-72 h-44 rounded-3xl clay-card opacity-25 blur-[7px] -rotate-6" />
+        <div className="hidden lg:block absolute top-[54%] left-[19%] w-56 h-32 rounded-3xl clay-card opacity-20 blur-[9px] rotate-3" />
+        <div className="hidden lg:block absolute top-[30%] left-[58%] w-64 h-40 rounded-3xl clay-card opacity-[0.14] blur-[11px] rotate-[7deg]" />
+        <div className="hidden lg:flex absolute top-[70%] left-[34%] w-40 h-12 rounded-full clay-card opacity-25 blur-[5px] -rotate-3 items-center gap-2 px-4">
+          <span className="w-3 h-3 rounded-full border-2 border-ink/50" />
+          <span className="h-1.5 flex-1 rounded-full bg-ink/25" />
         </div>
 
         {/* Distant glowing light trails */}
@@ -227,20 +228,34 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
         </div>
 
         {/* Scrim so the type always sits on a settled field */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#14070F]/75 via-[#14070F]/92 to-[#14070F]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F2EDE8]/80 via-[#F2EDE8]/94 to-[#F2EDE8]" />
         <div className="absolute inset-0 film-grain opacity-[0.07] mix-blend-overlay" />
       </div>
 
-      {/* ── RIGHT: Full-Bleed Film Wall (in front of the 3D elements) ─ */}
-      <div className="film-wall hidden lg:block absolute inset-y-0 right-0 w-[53%] xl:w-[52%] z-[3]">
-        <div className="absolute inset-0 flex gap-4 px-4 -rotate-[3deg] scale-[1.12]">
+      {/* The well the two blocks are set into. Without it they read as two
+          cards floating on a gradient; with it the hero is one moulded surface
+          with pieces pressed into it. */}
+      <div
+        aria-hidden="true"
+        className="hidden lg:block absolute left-6 right-6 top-20 bottom-8 rounded-[3rem] clay-inset z-[1]"
+      />
+
+      {/* ── RIGHT: the film wall, moulded into its own block ─────────────
+             It used to bleed off three edges of the viewport. Sitting it
+             inside a rounded clay block instead is what makes the hero read
+             as blocks-within-a-block rather than a full-bleed backdrop with
+             copy floating on it. */}
+      <div className="film-wall hidden lg:block absolute top-[7.5rem] bottom-20 right-14 xl:right-16 w-[43%] xl:w-[42%] z-[3] rounded-[2.5rem] clay-raised overflow-hidden">
+        <div className="absolute inset-0 flex gap-4 px-4 -rotate-[3deg] scale-[1.18]">
           <PosterColumn items={colA} direction="up" duration="60s" />
           <PosterColumn items={colB} direction="down" duration="72s" className="mt-[-5rem]" />
           <PosterColumn items={colC} direction="up" duration="52s" className="mt-[-2rem]" />
           <PosterColumn items={colD} direction="down" duration="66s" className="hidden xl:block mt-[-7rem]" />
         </div>
-        {/* Soft edge blend on both sides of the wall */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#14070F]/60 via-transparent to-[#14070F]/60 pointer-events-none" />
+        {/* The block's own shading, laid back over the posters so the wall
+            reads as recessed into the clay rather than pasted on top. */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(120%_100%_at_50%_0%,transparent_35%,rgba(20,7,15,0.55)_100%)]" />
+        <div className="absolute inset-0 pointer-events-none rounded-[2.5rem] shadow-[inset_0_4px_10px_-2px_rgba(0,0,0,0.8),inset_0_-3px_8px_-2px_rgba(0,0,0,0.7)]" />
       </div>
 
       {/* ── LEFT: Editorial Copy Block ────────────────────────────── */}
@@ -248,12 +263,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
         {/* Phones read this as an editorial page, not a centred template: one
             hard left edge that the kicker, masthead, rule and buttons all
             share. */}
-        <div className="text-left lg:w-[46%] lg:pl-20">
+        {/* On desktop the copy gets its own raised block sitting in the section
+            well; below lg it stays a plain column so phones and tablets aren't
+            paying for a card they don't have room for. */}
+        <div className="text-left lg:w-[50%] lg:clay-raised lg:rounded-[2.5rem] lg:p-11 xl:p-12">
           {/* Official-site marker. Clones and resellers are the norm in this
               market, so the badge names the one channel we actually answer on. */}
-          <div className="inline-flex items-center gap-2.5 mb-4 px-3 py-1.5 rounded-full border border-[#FFE600]/45 bg-[#FFE600]/10">
-            <BadgeCheck className="w-4 h-4 shrink-0 text-[#FFE600]" />
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-[#FFE9A8]">
+          <div className="inline-flex items-center gap-2.5 mb-4 px-3 py-1.5 rounded-full border border-[#C98A12]/45 bg-[#C98A12]/10">
+            <BadgeCheck className="w-4 h-4 shrink-0 text-[#C98A12]" />
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A5A0A]">
               Officiële BEEHOSTER-website
             </span>
           </div>
@@ -265,7 +283,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
           {/* clamp() instead of a raw vw size: the type keeps growing with the
               screen but can't blow past 5rem on a wide phone or shrink to
               nothing on a 320px one — and there's no size cliff at `sm`. */}
-          <h1 className="relative z-10 font-display uppercase text-white leading-[0.88] tracking-tight text-[clamp(3.5rem,17vw,5.5rem)] lg:text-[5rem] xl:text-[5.8rem]">
+          <h1 className="relative z-10 font-display uppercase text-ink leading-[0.88] tracking-tight text-[clamp(3.5rem,17vw,5.5rem)] lg:text-[5rem] xl:text-[5.8rem]">
             <span className="block drop-shadow-[0_6px_28px_rgba(0,0,0,0.9)]">80.000+</span>
             <span className="block accent-gradient-text drop-shadow-[0_6px_28px_rgba(0,0,0,0.55)]">Zenders</span>
           </h1>
@@ -274,17 +292,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
           {/* Same accent rule on every screen — it's the one indent in the
               column, so it reads as a standfirst rather than a stray line. */}
           <p className="mt-6 sm:mt-7 font-editorial text-base sm:text-xl leading-relaxed text-zinc-300 max-w-lg border-l border-[#FF5C3A]/40 pl-4 lg:pl-5">
-            Geen buffering, Anti-Freeze™ 9.0-servertechnologie en activatie binnen 5 minuten op Firestick, smart-tv,
-            Android en iOS. Alle sport, film &amp; PPV inbegrepen.
+            Alle sport, films en series in 4K. Binnen 5 minuten geregeld, op elk apparaat dat je al hebt.
           </p>
 
           {/* Action CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <a
               href="#pricing"
-              className="px-5 sm:px-7 py-[1.1rem] sm:py-4 text-[15px] sm:text-sm font-bold text-black accent-button-gradient rounded-full shadow-xl shadow-[#FF5C3A]/25 hover:shadow-[#FF5C3A]/40 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group"
+              className="px-5 sm:px-7 py-[1.1rem] sm:py-4 text-[15px] sm:text-sm font-bold text-[#FFF6EF] accent-button-gradient rounded-full shadow-xl shadow-[#FF5C3A]/25 hover:shadow-[#FF5C3A]/40 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 group"
             >
-              <Sparkles className="w-4.5 h-4.5 shrink-0 fill-black group-hover:rotate-12 transition-transform" />
+              <Sparkles className="w-4.5 h-4.5 shrink-0 fill-[#FFF6EF] group-hover:rotate-12 transition-transform" />
               {/* Narrow phones drop "Now" so the discount chip never gets squeezed. */}
               <span className="whitespace-nowrap">Abonnement nemen</span>
               <span className="shrink-0 bg-black/20 px-1.5 sm:px-2 py-0.5 rounded-lg text-[9px] sm:text-[10px] tracking-wider uppercase font-extrabold">
@@ -296,7 +313,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
               href={whatsAppLink('Hoi BEEHOSTER! Ik wil graag een IPTV-abonnement bestellen.')}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative px-7 py-[1.1rem] sm:py-4 text-[15px] sm:text-sm font-semibold text-zinc-100 glass-panel glass-edge rounded-full hover:border-[#25D366]/70 hover:text-white active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
+              className="relative px-7 py-[1.1rem] sm:py-4 text-[15px] sm:text-sm font-semibold text-zinc-100 clay-panel clay-edge rounded-full hover:border-[#25D366]/70 hover:text-ink active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5"
             >
               <WhatsAppIcon className="w-4.5 h-4.5 text-[#25D366]" />
               <span>Bestel via WhatsApp</span>
@@ -307,7 +324,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
               lettering that used to carry the catalogue size on desktop is
               gone. It sits inside the copy column so it stays clear of the
               film wall. */}
-          <div className="mt-8 grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/10 bg-white/[0.035] py-4 lg:max-w-md">
+          <div className="mt-8 grid grid-cols-3 divide-x divide-ink/10 rounded-2xl border border-ink/10 bg-ink/[0.035] py-4 lg:max-w-md">
             {[
               { value: '80.000+', label: 'Zenders' },
               { value: '200.000+', label: 'Films & series' },
@@ -327,9 +344,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenOrderModal }) => {
         </div>
 
         {/* ── MOBILE: full-bleed catalogue rails ───────────────────── */}
-        <div className="lg:hidden mt-10 pt-7 border-t border-white/10">
+        <div className="lg:hidden mt-10 pt-7 border-t border-ink/10">
           <div className="flex items-baseline justify-between gap-4 mb-4">
-            <span className="flex items-center gap-2 font-condensed uppercase text-[11px] tracking-[0.3em] text-[#FFD166]">
+            <span className="flex items-center gap-2 font-condensed uppercase text-[11px] tracking-[0.3em] text-[#B8790E]">
               <span className="flex h-1.5 w-1.5 relative shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF5C3A] opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF5C3A]" />

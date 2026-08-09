@@ -1,18 +1,97 @@
 @import "tailwindcss";
 
+/* ── Daylight palette ────────────────────────────────────────────────────
+   Clay is a lit material: it needs a light ground to cast onto, which is why
+   the reference is cream rather than black. The page is a warm off-white, the
+   raised blocks are near-white, and the shadows are warm grey rather than
+   neutral — a grey shadow on a cream ground reads as dirt.
+
+   Two things are deliberately NOT inverted: film posters and the phone
+   showcase panels keep their dark scrims, because those sit on photography and
+   white type on artwork is correct in either theme. */
+
+@theme {
+  --color-page: #F2EDE8;
+  --color-surface: #FFFFFF;
+  --color-ink: #241318;
+
+  /* The zinc ramp was carrying every piece of body copy on the dark theme.
+     Re-pointing it here at the light ink ramp converts ~80 existing
+     `text-zinc-*` usages at once, instead of editing every component. The
+     800/900/950 steps are untouched: those are backgrounds on artwork. */
+  --color-zinc-100: #241318;
+  --color-zinc-200: #33202A;
+  --color-zinc-300: #4E3640;
+  --color-zinc-400: #6E5560;
+  --color-zinc-500: #8A7079;
+}
+
+/* Declared with @utility rather than inside @layer utilities so they accept
+   breakpoint variants — the nested-block hero is a desktop arrangement, and
+   `lg:clay-raised` has to actually compile. */
+
+@utility clay-raised {
+  background: linear-gradient(158deg,
+    #FFFFFF 0%,
+    #FDF9F5 52%,
+    #F8F2EB 100%);
+  border: 1px solid rgba(36, 19, 24, 0.05);
+  box-shadow:
+    inset 0 2px 1px rgba(255, 255, 255, 1),
+    inset 0 -4px 8px -2px rgba(178, 148, 132, 0.26),
+    0 2px 4px rgba(122, 96, 84, 0.10),
+    0 16px 30px -12px rgba(122, 96, 84, 0.24),
+    0 38px 64px -38px rgba(96, 72, 62, 0.38);
+}
+
+/* ── Comb cells ───────────────────────────────────────────────────────────
+   A pack card cut into a honeycomb cell: flat sides, pointed top and bottom.
+   The points are a fixed 34px rather than a percentage so every cell reads as
+   the same cell regardless of how tall its card grew.
+
+   The shadow has to come from a filter, not box-shadow: clip-path clips an
+   element's own box-shadow away, whereas drop-shadow() traces the clipped
+   silhouette. That's also why this sits on a background layer of its own
+   instead of on the card — a clipped card would cut the "Beste deal" badge
+   off at the top edge. */
+@utility hex-cell {
+  clip-path: polygon(
+    50% 0,
+    100% 34px,
+    100% calc(100% - 34px),
+    50% 100%,
+    0 calc(100% - 34px),
+    0 34px
+  );
+  filter:
+    drop-shadow(0 2px 3px rgba(146, 108, 44, 0.16))
+    drop-shadow(0 14px 22px rgba(146, 108, 44, 0.22))
+    drop-shadow(0 30px 46px rgba(120, 88, 34, 0.20));
+}
+
+/* The best deal sits at the deep end of the ramp, so it can't lean on hue
+   alone to stand out — it lifts further out of the comb instead. */
+@utility hex-cell-best {
+  filter:
+    drop-shadow(0 3px 4px rgba(146, 96, 28, 0.20))
+    drop-shadow(0 20px 30px rgba(156, 100, 26, 0.28))
+    drop-shadow(0 42px 60px rgba(128, 82, 22, 0.26))
+    drop-shadow(0 0 26px rgba(255, 176, 60, 0.35));
+}
+
+/* Pressed into the surface rather than sitting on it — the light and shade swap
+   ends. This is the well that holds the raised blocks. */
+@utility clay-inset {
+  background: linear-gradient(158deg,
+    #E9E0D8 0%,
+    #EFE7E0 100%);
+  border: 1px solid rgba(36, 19, 24, 0.04);
+  box-shadow:
+    inset 0 3px 9px -1px rgba(150, 122, 108, 0.38),
+    inset 0 -2px 1px rgba(255, 255, 255, 0.9);
+}
+
 @layer utilities {
-  .bg-pitch-black {
-    background-color: #14070F;
-  }
-  
-  .bg-dark-charcoal {
-    background-color: #14070F;
-  }
-
-  .bg-card-dark {
-    background-color: #1F0D18;
-  }
-
   .text-accent {
     color: #FF5C3A;
   }
@@ -37,29 +116,41 @@
     box-shadow: 0 0 35px rgba(255, 92, 58, 0.5);
   }
 
-  .glass-card {
+  /* ── Clay surfaces ────────────────────────────────────────────────────
+     The panels are moulded rather than glazed: a matte warm fill, a lit top
+     edge, a shaded bottom edge and a soft drop underneath. Two rules make it
+     read as clay instead of a flat card — the light always comes from above
+     (inset light on top, inset dark on the bottom) and nothing has a hard
+     1px border doing the work of the shadow.
+
+     A little translucency and blur survive on purpose: the section blooms
+     still tint the surface from behind, so the pricing glow and the aurora
+     don't disappear under opaque slabs. */
+
+  .clay-card {
     background: linear-gradient(158deg,
-      rgba(255, 214, 180, 0.10) 0%,
-      rgba(255, 190, 150, 0.03) 42%,
-      rgba(18, 6, 12, 0.42) 100%);
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
-    border: 1px solid rgba(255, 214, 180, 0.20);
+      #FFFFFF 0%,
+      #FDF9F5 52%,
+      #F8F2EB 100%);
+    border: 1px solid rgba(36, 19, 24, 0.05);
     box-shadow:
-      inset 0 1px 0 rgba(255, 226, 195, 0.22),
-      0 40px 90px -45px rgba(0, 0, 0, 0.95);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -4px 8px -2px rgba(178, 148, 132, 0.26),
+      0 2px 4px rgba(122, 96, 84, 0.10),
+      0 16px 30px -12px rgba(122, 96, 84, 0.24),
+      0 38px 64px -38px rgba(96, 72, 62, 0.38);
   }
 
   /* Glossy 1px gradient edge that rides the top of a panel */
-  .glass-edge::before {
+  .clay-edge::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     padding: 1px;
     background: linear-gradient(150deg,
-      rgba(255, 232, 200, 0.62) 0%,
-      rgba(255, 190, 120, 0.14) 26%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 220, 190, 0.35) 26%,
       transparent 55%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
@@ -76,7 +167,7 @@
     width: 85%;
     height: 75%;
     border-radius: 9999px;
-    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.2), transparent 100%);
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.75), transparent 100%);
     filter: blur(26px);
     pointer-events: none;
   }
@@ -88,59 +179,111 @@
     pointer-events: none;
   }
 
+  /* On a dark ground these were light sources; on cream they can only be
+     tints, so every alpha drops by roughly two thirds. Left at the old
+     strength they turned the page into a bruise. */
   .bloom-warm {
     background: radial-gradient(closest-side,
-      rgba(255, 209, 102, 0.95) 0%,
-      rgba(255, 122, 60, 0.6) 30%,
-      rgba(255, 61, 139, 0.34) 58%,
+      rgba(255, 196, 92, 0.34) 0%,
+      rgba(255, 138, 74, 0.22) 30%,
+      rgba(255, 120, 150, 0.12) 58%,
       transparent 100%);
     filter: blur(70px);
   }
 
   .bloom-ember {
     background: radial-gradient(closest-side,
-      rgba(255, 61, 139, 0.7) 0%,
-      rgba(168, 44, 96, 0.38) 46%,
+      rgba(255, 120, 150, 0.24) 0%,
+      rgba(214, 120, 160, 0.13) 46%,
       transparent 100%);
     filter: blur(90px);
   }
 
-  /* Frosted Panel — translucent glass over the aurora background */
-  .glass-panel {
+  /* The workhorse surface — moulded, not frosted. */
+  .clay-panel {
     background: linear-gradient(158deg,
-      rgba(255, 214, 180, 0.11) 0%,
-      rgba(255, 190, 150, 0.032) 42%,
-      rgba(18, 6, 12, 0.42) 100%);
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
-    border: 1px solid rgba(255, 214, 180, 0.20);
+      #FFFFFF 0%,
+      #FDF9F5 52%,
+      #F8F2EB 100%);
+    border: 1px solid rgba(36, 19, 24, 0.05);
     box-shadow:
-      inset 0 1px 0 rgba(255, 226, 195, 0.24),
-      0 40px 90px -45px rgba(0, 0, 0, 0.95);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -4px 8px -2px rgba(178, 148, 132, 0.26),
+      0 2px 4px rgba(122, 96, 84, 0.10),
+      0 16px 30px -12px rgba(122, 96, 84, 0.24),
+      0 38px 64px -38px rgba(96, 72, 62, 0.38);
   }
 
-  /* Highlighted Plan — glass with an electric-blue rim light */
-  .glass-panel-accent {
-    background: linear-gradient(158deg,
-      rgba(255, 154, 46, 0.24) 0%,
-      rgba(255, 61, 139, 0.14) 45%,
-      rgba(20, 6, 14, 0.46) 100%);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid rgba(255, 190, 120, 0.55);
+  /* Clay lighting with no fill of its own — the background comes from the
+     component, which paints that card's slice of the shared pack ramp. The
+     shadows are cooled to match; a warm shadow under a mint panel is the same
+     mistake as a grey one on cream. */
+  .clay-ramp {
+    border: 1px solid rgba(24, 34, 54, 0.06);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.32),
-      inset 0 0 60px -20px rgba(255, 209, 102, 0.55),
-      0 0 0 1px rgba(255, 154, 46, 0.16),
-      0 0 70px -12px rgba(255, 154, 46, 0.55),
-      0 45px 95px -45px rgba(0, 0, 0, 0.95);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -4px 8px -2px rgba(124, 142, 176, 0.30),
+      0 2px 4px rgba(84, 100, 130, 0.10),
+      0 16px 30px -12px rgba(84, 100, 130, 0.24),
+      0 38px 64px -38px rgba(62, 76, 102, 0.38);
+  }
+
+  /* The best deal sits at the deep end of the ramp, so it can't lean on hue
+     alone to stand out — it lifts further off the page instead. */
+  .clay-ramp-best {
+    border: 1px solid rgba(94, 88, 176, 0.22);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -5px 10px -2px rgba(108, 118, 176, 0.34),
+      0 2px 4px rgba(84, 92, 140, 0.14),
+      0 22px 40px -12px rgba(76, 84, 140, 0.32),
+      0 0 60px -18px rgba(120, 116, 210, 0.35),
+      0 46px 76px -40px rgba(58, 64, 104, 0.45);
+  }
+
+  /* Highlighted Plan — the same clay warmed through with ember, so it reads as
+     the featured block by material rather than by a rim light alone. */
+  .clay-panel-accent {
+    background: linear-gradient(158deg,
+      #FFF3EC 0%,
+      #FFE6D8 48%,
+      #FFD9C4 100%);
+    border: 1px solid rgba(255, 92, 58, 0.22);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -5px 10px -2px rgba(200, 122, 88, 0.30),
+      inset 0 0 60px -22px rgba(255, 122, 60, 0.35),
+      0 2px 4px rgba(122, 96, 84, 0.12),
+      0 18px 34px -12px rgba(160, 96, 70, 0.28),
+      0 0 60px -18px rgba(255, 122, 60, 0.30),
+      0 42px 70px -40px rgba(96, 72, 62, 0.42);
+  }
+
+  /* The pricing section's own light, cooled to sit under the pack ramp. Warm
+     blooms behind a mint-to-violet row left the cards floating on a peach haze
+     that fought them. VIP keeps the gold pair. */
+  .bloom-cool {
+    background: radial-gradient(closest-side,
+      rgba(150, 190, 240, 0.32) 0%,
+      rgba(140, 160, 230, 0.20) 34%,
+      rgba(160, 150, 235, 0.10) 62%,
+      transparent 100%);
+    filter: blur(70px);
+  }
+
+  .bloom-cool-deep {
+    background: radial-gradient(closest-side,
+      rgba(150, 155, 235, 0.24) 0%,
+      rgba(130, 165, 225, 0.13) 46%,
+      transparent 100%);
+    filter: blur(90px);
   }
 
   .bloom-vip {
     background: radial-gradient(closest-side,
-      rgba(255, 214, 130, 0.9) 0%,
-      rgba(255, 168, 46, 0.6) 34%,
-      rgba(214, 108, 20, 0.32) 62%,
+      rgba(255, 214, 130, 0.36) 0%,
+      rgba(255, 178, 66, 0.22) 34%,
+      rgba(214, 138, 40, 0.11) 62%,
       transparent 100%);
     filter: blur(80px);
   }
@@ -148,26 +291,49 @@
   /* VIP tier — royal honey. The basic tier is ember glass; VIP goes darker and
      richer underneath with a bright gold rim, so it reads as the same family
      turned up rather than an unrelated colour. */
-  .glass-panel-vip {
+  .clay-panel-vip {
     background: linear-gradient(158deg,
-      rgba(255, 209, 102, 0.24) 0%,
-      rgba(255, 154, 46, 0.15) 42%,
-      rgba(30, 14, 4, 0.62) 100%);
-    backdrop-filter: blur(28px) saturate(170%);
-    -webkit-backdrop-filter: blur(28px) saturate(170%);
-    border: 1px solid rgba(255, 216, 138, 0.7);
+      #FFF8E6 0%,
+      #FFEFC9 46%,
+      #FCE3AC 100%);
+    border: 1px solid rgba(201, 138, 18, 0.28);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.45),
-      inset 0 0 70px -18px rgba(255, 196, 88, 0.65),
-      0 0 0 1px rgba(255, 190, 90, 0.22),
-      0 0 80px -14px rgba(255, 170, 60, 0.7),
-      0 45px 95px -45px rgba(0, 0, 0, 0.98);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -5px 10px -2px rgba(190, 148, 62, 0.32),
+      inset 0 0 70px -20px rgba(255, 196, 88, 0.45),
+      0 2px 4px rgba(122, 96, 84, 0.12),
+      0 18px 34px -12px rgba(160, 126, 50, 0.28),
+      0 0 70px -16px rgba(255, 176, 60, 0.35),
+      0 42px 70px -40px rgba(96, 78, 46, 0.42);
   }
 
+  /* The VIP price, struck rather than tinted. A flat dark-to-light ramp just
+     reads as "brownish text" at this size; what makes metal look like metal is
+     a bright band running across the middle with the ramp turning back down on
+     either side of it, so the glyphs catch a light source. The stops are
+     deliberately uneven — an even ramp reads as a gradient, an uneven one reads
+     as a reflection.
+
+     The pair of drop-shadows does the rest: a 1px white one directly under the
+     glyph embosses it into the honey card, and the soft brown one lifts it back
+     off. Both trace the glyph outline rather than the box, because the fill is
+     transparent and the paint comes from the clipped background. */
   .vip-gradient-text {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFF0C4 30%, #FFD166 62%, #FF9A2E 100%);
+    background: linear-gradient(135deg,
+      #6B3A05 0%,
+      #9A6410 14%,
+      #C68F1E 30%,
+      #F7DC8A 44%,
+      #E8BE4E 52%,
+      #B87D14 66%,
+      #8A5A0A 82%,
+      #D8A527 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter:
+      drop-shadow(0 1px 0 rgba(255, 252, 240, 0.75))
+      drop-shadow(0 3px 7px rgba(122, 74, 8, 0.35));
   }
 
   .pill-vip {
@@ -189,37 +355,36 @@
        do the work; every stop stays near-opaque because backdrop-filter can't
        be relied on here — headings were reading straight through the pill. */
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='40' viewBox='0 0 34 40'%3E%3Cg fill='none' stroke='%23FFD9A0' stroke-opacity='0.16' stroke-width='1.1'%3E%3Cpath d='M17 1 L32 9.5 L32 26.5 L17 35 L2 26.5 L2 9.5 Z'/%3E%3Cpath d='M0 -19 L15 -10.5 L15 6.5 L0 15 L-15 6.5 L-15 -10.5 Z'/%3E%3Cpath d='M34 -19 L49 -10.5 L49 6.5 L34 15 L19 6.5 L19 -10.5 Z'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='40' viewBox='0 0 34 40'%3E%3Cg fill='none' stroke='%23C98A12' stroke-opacity='0.22' stroke-width='1.1'%3E%3Cpath d='M17 1 L32 9.5 L32 26.5 L17 35 L2 26.5 L2 9.5 Z'/%3E%3Cpath d='M0 -19 L15 -10.5 L15 6.5 L0 15 L-15 6.5 L-15 -10.5 Z'/%3E%3Cpath d='M34 -19 L49 -10.5 L49 6.5 L34 15 L19 6.5 L19 -10.5 Z'/%3E%3C/g%3E%3C/svg%3E"),
       linear-gradient(158deg,
-        rgba(94, 40, 22, 0.97) 0%,
-        rgba(56, 22, 34, 0.98) 46%,
-        rgba(24, 9, 17, 0.99) 100%);
+        #FFFFFF 0%,
+        #FFF6EC 46%,
+        #FFEEDC 100%);
     background-size: 34px 40px, auto;
-    backdrop-filter: blur(26px) saturate(165%);
-    -webkit-backdrop-filter: blur(26px) saturate(165%);
-    border: 1px solid rgba(255, 190, 120, 0.55);
+    border: 1px solid rgba(255, 154, 46, 0.28);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      inset 0 0 40px -14px rgba(255, 209, 102, 0.6),
-      0 0 0 1px rgba(255, 154, 46, 0.16),
-      0 0 40px -10px rgba(255, 154, 46, 0.45),
-      0 20px 42px -20px rgba(0, 0, 0, 0.95);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -4px 8px -2px rgba(200, 140, 96, 0.28),
+      inset 0 0 40px -14px rgba(255, 190, 90, 0.35),
+      0 2px 4px rgba(122, 96, 84, 0.12),
+      0 14px 28px -12px rgba(160, 110, 80, 0.30);
   }
 
   /* Navigation glass — one treatment for the phone dock, the desktop menu and
      the rail, so the menu reads the same on both. Warm-tinted and blurred,
      unlike the brand plate which has to stay opaque. */
-  .menu-glass {
+  .clay-nav {
     background: linear-gradient(158deg,
-      rgba(255, 190, 120, 0.15) 0%,
-      rgba(255, 120, 60, 0.07) 45%,
-      rgba(24, 9, 17, 0.62) 100%);
-    backdrop-filter: blur(22px) saturate(160%);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid rgba(255, 190, 120, 0.38);
+      #FFFFFF 0%,
+      #FCF7F2 48%,
+      #F7F0E8 100%);
+    border: 1px solid rgba(36, 19, 24, 0.05);
     box-shadow:
-      inset 0 1px 0 rgba(255, 235, 205, 0.24),
-      0 22px 48px -22px rgba(0, 0, 0, 0.95);
+      inset 0 2px 1px rgba(255, 255, 255, 1),
+      inset 0 -4px 8px -2px rgba(178, 148, 132, 0.24),
+      0 2px 4px rgba(122, 96, 84, 0.10),
+      0 12px 24px -8px rgba(122, 96, 84, 0.22),
+      0 26px 46px -24px rgba(96, 72, 62, 0.36);
   }
 
   /* Honeycomb tile — laid over the best-deal card so the pack feels like part
@@ -229,26 +394,45 @@
     background-size: 56px 64px;
   }
 
-  /* White Pill CTA (reference-style) */
+  /* Was a white pill on black; on cream the contrast has to flip or it
+     disappears into the card. Now the dark pill — still the strongest
+     button on the page, just from the other end of the ramp. */
   .pill-light {
-    background: #FFFFFF;
-    color: #000000;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+    background: linear-gradient(180deg, #3A2129 0%, #241318 100%);
+    color: #FFF6EF;
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.22),
+      inset 0 -4px 7px -2px rgba(0, 0, 0, 0.45),
+      0 3px 5px rgba(122, 96, 84, 0.28),
+      0 12px 24px -8px rgba(96, 72, 62, 0.42);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
   }
 
   .pill-light:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 30px -10px rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.22),
+      inset 0 -4px 7px -2px rgba(0, 0, 0, 0.45),
+      0 5px 8px rgba(122, 96, 84, 0.28),
+      0 18px 32px -8px rgba(96, 72, 62, 0.48);
+  }
+
+  /* Pressed: the pill sinks into its own shadow rather than just dimming. */
+  .pill-light:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 3px 7px -1px rgba(0, 0, 0, 0.55),
+      0 1px 2px rgba(122, 96, 84, 0.3);
   }
 
   /* Blue Aurora Blob — the light source behind dark sections */
   .aurora {
-    background: radial-gradient(closest-side, rgba(255, 209, 102, 0.9) 0%, rgba(255, 92, 58, 0.6) 36%, rgba(255, 61, 139, 0.3) 64%, transparent 100%);
+    background: radial-gradient(closest-side, rgba(255, 209, 102, 0.30) 0%, rgba(255, 122, 74, 0.20) 36%, rgba(255, 120, 150, 0.10) 64%, transparent 100%);
     filter: blur(60px);
   }
 
   .aurora-soft {
-    background: radial-gradient(closest-side, rgba(255, 122, 60, 0.5) 0%, rgba(168, 44, 96, 0.3) 55%, transparent 100%);
+    background: radial-gradient(closest-side, rgba(255, 150, 90, 0.18) 0%, rgba(210, 120, 155, 0.10) 55%, transparent 100%);
     filter: blur(90px);
   }
 
@@ -257,28 +441,56 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='0.6'/%3E%3C/svg%3E");
   }
 
-  .glass-card-hover {
+  .clay-card-hover {
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
-  .glass-card-hover:hover {
+  .clay-card-hover:hover {
     border-color: rgba(255, 92, 58, 0.5);
     box-shadow: 0 10px 30px -10px rgba(255, 92, 58, 0.25);
     transform: translateY(-2px);
   }
 
+  /* Ran white → gold on the dark theme; on cream the white end vanished, so
+     the ramp now runs dark ember → amber and keeps its contrast against the
+     ink the rest of the headline is set in. */
   .accent-gradient-text {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFF 34%, #FFD166 66%, #FF5C3A 100%);
+    background: linear-gradient(135deg, #B23410 0%, #E04A18 34%, #FF5C3A 66%, #F0A020 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
+  /* The primary CTA, same material as .pill-light. Declared after Tailwind's
+     own utilities so this shadow is the one that lands — the components that
+     use it still carry `shadow-xl shadow-[#FF5C3A]/…`, and a flat coloured glow
+     underneath a moulded button would read as two different materials. */
   .accent-button-gradient {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFF1E4 100%);
+    background: linear-gradient(180deg, #FF7A4D 0%, #FF5C3A 55%, #E8431F 100%);
+    color: #FFF6EF;
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.5),
+      inset 0 -4px 7px -2px rgba(150, 42, 12, 0.45),
+      0 3px 5px rgba(150, 70, 46, 0.3),
+      0 12px 24px -8px rgba(180, 74, 40, 0.45),
+      0 0 34px -12px rgba(255, 92, 58, 0.55);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
   }
 
   .accent-button-gradient:hover {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFE0B3 100%);
+    background: linear-gradient(180deg, #FF8A5D 0%, #FF6A45 55%, #F04E29 100%);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.5),
+      inset 0 -4px 7px -2px rgba(150, 42, 12, 0.45),
+      0 5px 8px rgba(150, 70, 46, 0.3),
+      0 18px 32px -8px rgba(180, 74, 40, 0.5),
+      0 0 44px -10px rgba(255, 92, 58, 0.7);
+  }
+
+  .accent-button-gradient:active {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 3px 7px -1px rgba(150, 42, 12, 0.6),
+      0 1px 2px rgba(150, 70, 46, 0.3);
   }
 
   /* Editorial Typography Families */
@@ -297,12 +509,12 @@
   /* Hollow Poster-Style Lettering */
   .text-outline {
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.75);
+    -webkit-text-stroke: 1.5px rgba(36, 19, 24, 0.55);
   }
 
   .text-outline-hero {
     color: transparent;
-    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.9);
+    -webkit-text-stroke: 2px rgba(36, 19, 24, 0.7);
   }
 
   /* Film Grain Texture Overlay for Posters */
@@ -314,18 +526,18 @@
   /* Internal glow carried by the stroke itself */
   .outline-glow {
     filter:
-      drop-shadow(0 0 14px rgba(255, 200, 140, 0.45))
-      drop-shadow(0 0 40px rgba(255, 92, 58, 0.3))
-      drop-shadow(0 26px 34px rgba(0, 0, 0, 0.95));
+      drop-shadow(0 0 14px rgba(255, 170, 90, 0.35))
+      drop-shadow(0 0 40px rgba(255, 92, 58, 0.22))
+      drop-shadow(0 20px 28px rgba(122, 96, 84, 0.35));
   }
 
   /* Distant light trail */
   .light-trail {
     background: linear-gradient(90deg,
       transparent 0%,
-      rgba(120, 200, 255, 0.55) 35%,
-      rgba(255, 225, 180, 0.9) 50%,
-      rgba(120, 200, 255, 0.5) 65%,
+      rgba(255, 154, 46, 0.30) 35%,
+      rgba(255, 92, 58, 0.45) 50%,
+      rgba(255, 154, 46, 0.28) 65%,
       transparent 100%);
   }
 
@@ -514,10 +726,10 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #14070F;
+  background: #E9E0D8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272A;
+  background: #C6B5AA;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {

@@ -48,10 +48,18 @@ export const BeehosterLogo: React.FC<React.SVGProps<SVGSVGElement>> = ({
       </linearGradient>
     </defs>
 
-    {/* Badge — solid plate first so the mark is never see-through against the
-        glass panels it sits on, gradient on top for depth. */}
-    <rect x="3" y="3" width="58" height="58" rx="20" fill="#1A0912" />
-    <rect x="3" y="3" width="58" height="58" rx="20" fill={`url(#${badgeId})`} stroke="#FF5C3A" strokeWidth="2.5" />
+    {/* Badge — a honeycomb cell rather than a rounded square, so the mark reads
+        as hive at any size. Solid plate first so it's never see-through against
+        the panels it sits on, gradient on top for depth. The rounded linejoin
+        softens the six corners without needing arc geometry. */}
+    <polygon points="32,3 57.12,17.5 57.12,46.5 32,61 6.88,46.5 6.88,17.5" fill="#1A0912" strokeLinejoin="round" />
+    <polygon
+      points="32,3 57.12,17.5 57.12,46.5 32,61 6.88,46.5 6.88,17.5"
+      fill={`url(#${badgeId})`}
+      stroke="#FF5C3A"
+      strokeWidth="2.5"
+      strokeLinejoin="round"
+    />
 
     {/* Honeycomb ring */}
     <g stroke="#FF9A2E" strokeWidth="1.6" fill="none" opacity="0.75">

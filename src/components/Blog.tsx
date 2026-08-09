@@ -31,15 +31,15 @@ const POSTS = [
 ];
 
 export const Blog: React.FC = () => (
-  <section id="blog" className="relative z-10 py-24 border-t border-white/5">
+  <section id="blog" className="relative z-10 py-24 border-t border-ink/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <div className="text-center max-w-3xl mx-auto mb-12">
-        <span className="inline-flex items-center gap-2 text-xs font-bold text-[#FFD166] uppercase tracking-widest bg-[#FF5C3A]/10 px-3.5 py-1 rounded-full border border-[#FF5C3A]/30">
+        <span className="inline-flex items-center gap-2 text-xs font-bold text-[#B8790E] uppercase tracking-widest bg-[#FF5C3A]/10 px-3.5 py-1 rounded-full border border-[#FF5C3A]/30">
           <BookOpen className="w-3.5 h-3.5" />
           Blog
         </span>
-        <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+        <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-ink tracking-tight">
           Alles over <span className="accent-gradient-text">IPTV</span>, uitgelegd
         </h2>
         <p className="mt-3 text-sm sm:text-base text-zinc-400">
@@ -52,16 +52,16 @@ export const Blog: React.FC = () => (
           <a
             key={post.href}
             href={post.href}
-            className="group glass-card glass-edge glass-card-hover rounded-3xl p-6 sm:p-7 flex flex-col"
+            className="group clay-card clay-edge clay-card-hover rounded-3xl p-6 sm:p-7 flex flex-col"
           >
             <div className="flex items-center justify-between gap-3 mb-4">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFD166]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B8790E]">
                 {post.kicker}
               </span>
               <span className="text-[11px] text-zinc-500">{post.readTime} lezen</span>
             </div>
 
-            <h3 className="text-lg font-bold text-white leading-snug group-hover:text-[#FFD166] transition-colors">
+            <h3 className="text-lg font-bold text-ink leading-snug group-hover:text-[#B8790E] transition-colors">
               {post.title}
             </h3>
 

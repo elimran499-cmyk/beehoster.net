@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AmbientLights } from './components/AmbientLights';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { MobileShowcase } from './components/MobileShowcase';
 import { DeviceBanner } from './components/DeviceBanner';
 import { ChannelExplorer } from './components/ChannelExplorer';
 import { Features } from './components/Features';
@@ -30,7 +31,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-pitch-black text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="relative min-h-screen bg-page text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
 
       {/* Shared neon light field behind every section */}
       <AmbientLights />
@@ -43,8 +44,13 @@ export default function App() {
           their full width back; the dock sits at the bottom instead. */}
       <main className="relative z-10 flex-grow sm:pr-[5.5rem] lg:pr-24">
         
-        {/* Hero Section */}
-        <Hero onOpenOrderModal={handleOpenOrderModal} />
+        {/* Hero Section. Two separate builds: phones get the stacked full-bleed
+            panels, sm and up gets the editorial split. The wrapper owns the
+            #hero id so navigation and the scroll spy work either way. */}
+        <div id="hero">
+          <MobileShowcase />
+          <Hero onOpenOrderModal={handleOpenOrderModal} />
+        </div>
 
         {/* Channel & VOD Explorer — the catalogue answers the first question a
             visitor has, so it leads straight out of the hero */}
@@ -72,7 +78,7 @@ export default function App() {
 
       {/* Footer — extra bottom room on phones so the dock never sits on the
           legal text */}
-      <div className="pb-20 sm:pb-0 sm:pr-[5.5rem] lg:pr-24">
+      <div className="pb-24 sm:pb-0 sm:pr-[5.5rem] lg:pr-24">
         <Footer onOpenOrderModal={handleOpenOrderModal} />
       </div>
 
@@ -84,7 +90,7 @@ export default function App() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Neem contact op via WhatsApp: ${WHATSAPP_DISPLAY}`}
-          className="p-3.5 rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/40 hover:scale-110 transition-transform duration-300 flex items-center justify-center border border-white/25"
+          className="p-3.5 rounded-full bg-[#25D366] text-[#FFFFFF] shadow-xl shadow-[#25D366]/40 hover:scale-110 transition-transform duration-300 flex items-center justify-center border border-ink/25"
           title={`WhatsApp-support 24/7 — ${WHATSAPP_DISPLAY}`}
         >
           <WhatsAppIcon className="w-6 h-6" />
