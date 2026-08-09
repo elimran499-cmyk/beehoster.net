@@ -79,6 +79,19 @@
     drop-shadow(0 0 26px rgba(255, 176, 60, 0.35));
 }
 
+/* A regular pointy-top hexagon, for tiles that should read as single cells of
+   comb rather than as tall cards. Percentages here, unlike .hex-cell — these
+   tiles are laid out at a fixed aspect ratio, so a percentage keeps the six
+   sides equal at any size. Same filter trick: clip-path would clip a
+   box-shadow away, drop-shadow traces the clipped silhouette. */
+@utility hex-tile {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  filter:
+    drop-shadow(0 2px 3px rgba(146, 108, 44, 0.16))
+    drop-shadow(0 12px 20px rgba(146, 108, 44, 0.22))
+    drop-shadow(0 26px 40px rgba(120, 88, 34, 0.18));
+}
+
 /* Pressed into the surface rather than sitting on it — the light and shade swap
    ends. This is the well that holds the raised blocks. */
 @utility clay-inset {

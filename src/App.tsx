@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AmbientLights } from './components/AmbientLights';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { Intro } from './components/Intro';
 import { MobileShowcase } from './components/MobileShowcase';
 import { DeviceBanner } from './components/DeviceBanner';
 import { ChannelExplorer } from './components/ChannelExplorer';
@@ -51,6 +52,10 @@ export default function App() {
           <MobileShowcase />
           <Hero onOpenOrderModal={handleOpenOrderModal} />
         </div>
+
+        {/* Who we are, before what we sell — the bee metaphor mapped onto the
+            things it actually stands for. */}
+        <Intro />
 
         {/* Channel & VOD Explorer — the catalogue answers the first question a
             visitor has, so it leads straight out of the hero */}
